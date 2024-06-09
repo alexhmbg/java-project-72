@@ -13,6 +13,9 @@ start:
 install:
 	make -C app install
 
+run:
+	make -C app clean run
+
 start-dist:
 	make -C app start-dist
 
