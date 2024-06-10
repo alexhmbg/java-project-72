@@ -24,7 +24,6 @@ import gg.jte.TemplateEngine;
 import io.javalin.rendering.template.JavalinJte;
 
 
-
 @Slf4j
 public class App {
     private static int getPort() {

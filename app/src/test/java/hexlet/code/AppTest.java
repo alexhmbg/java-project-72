@@ -120,7 +120,7 @@ public class AppTest {
 
     @Test
     public void testUrlPage() throws SQLException {
-        var url = new Url("https://www.github.com");
+        var url = new Url("https://www.hexlet.com");
         UrlsRepository.save(url);
         JavalinTest.test(app, ((server, client) -> {
             var response = client.get("/urls/" + url.getId());
@@ -130,7 +130,7 @@ public class AppTest {
 
     @Test
     public void testUrlNotFound() throws SQLException {
-        Long id = 999999L;
+        Long id = 123456L;
         UrlsRepository.delete(id);
         JavalinTest.test(app, ((server, client) -> {
             var response = client.get("/urls/" + id);
