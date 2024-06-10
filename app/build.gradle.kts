@@ -32,9 +32,11 @@ dependencies {
     implementation("io.javalin:javalin-bundle:6.1.4")
     implementation("io.javalin:javalin-rendering:6.1.4")
     implementation("org.jsoup:jsoup:1.16.1")
+    implementation("com.konghq:unirest-java:3.14.5")
     implementation("com.konghq:unirest-java-bom:4.4.0")
     implementation("com.konghq:unirest-java-core:4.4.0")
 
+    testImplementation("com.konghq:unirest-java:3.14.2")
     testImplementation("org.assertj:assertj-core:3.25.3")
     testImplementation(platform("org.junit:junit-bom:5.10.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
