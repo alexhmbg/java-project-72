@@ -20,7 +20,6 @@ import io.javalin.Javalin;
 import io.javalin.testtools.JavalinTest;
 
 public class AppTest {
-    private static final String FIXTURE_NAME_FOR_RESPONSE_BODY = "index.html";
     Javalin app;
 
     private static Path getFixturePath(String fileName) {
@@ -42,7 +41,7 @@ public class AppTest {
     public void testAddUrlCheck() throws Exception {
         try (MockWebServer mockServer = new MockWebServer()) {
             String baseUrl = mockServer.url("/").toString();
-            MockResponse mockResponse = new MockResponse().setBody(readFixture(FIXTURE_NAME_FOR_RESPONSE_BODY));
+            MockResponse mockResponse = new MockResponse().setBody(readFixture("index.html"));
             mockServer.enqueue(mockResponse);
 
             var actualUrl = new Url(baseUrl);
@@ -67,6 +66,14 @@ public class AppTest {
     }
 
     @Test
+    public void testUrlsPage() {
+        JavalinTest.test(app, ((server, client) -> {
+            var response = client.get("/urls");
+            assertThat(response.code()).isEqualTo(200);
+        }));
+    }
+
+    @Test
     public void testRootPage() {
         JavalinTest.test(app, ((server, client) -> {
             var response = client.get("/");
@@ -77,33 +84,25 @@ public class AppTest {
     }
 
     @Test
-    public void testUrlsPage() {
-        JavalinTest.test(app, ((server, client) -> {
-            var response = client.get("/urls");
-            assertThat(response.code()).isEqualTo(200);
-        }));
-    }
-
-    @Test
     public void testCreateValidUrlWithoutPortWithoutPath() {
         JavalinTest.test(app, ((server, client) -> {
-            var requestBody = "url=https://www.examplename.com";
+            var requestBody = "url=https://www.dummy.com";
             var response = client.post("/urls", requestBody);
 
             assertThat(response.code()).isEqualTo(200);
             assertThat(response.body()).isNotNull();
-            assertThat(response.body().string()).contains("https://www.examplename.com");
+            assertThat(response.body().string()).contains("https://www.dummy.com");
         }));
     }
 
     @Test
     public void testCreateValidUrlWithPortWithPath() {
         JavalinTest.test(app, ((server, client) -> {
-            var requestBody = "url=https://some-domain.org:8080/example/path";
+            var requestBody = "url=https://dummy.com:8080/example/path";
             var response = client.post("/urls", requestBody);
             assertThat(response.code()).isEqualTo(200);
             assertThat(response.body()).isNotNull();
-            assertThat(response.body().string()).contains("https://some-domain.org:8080");
+            assertThat(response.body().string()).contains("https://dummy.com:8080");
         }));
     }
 
@@ -119,16 +118,6 @@ public class AppTest {
     }
 
     @Test
-    public void testUrlPage() throws SQLException {
-        var url = new Url("https://www.hexlet.com");
-        UrlsRepository.save(url);
-        JavalinTest.test(app, ((server, client) -> {
-            var response = client.get("/urls/" + url.getId());
-            assertThat(response.code()).isEqualTo(200);
-        }));
-    }
-
-    @Test
     public void testUrlNotFound() throws SQLException {
         Long id = 123456L;
         UrlsRepository.delete(id);
@@ -138,4 +127,13 @@ public class AppTest {
         }));
     }
 
+    @Test
+    public void testUrlPage() throws SQLException {
+        var url = new Url("https://www.hexlet.com");
+        UrlsRepository.save(url);
+        JavalinTest.test(app, ((server, client) -> {
+            var response = client.get("/urls/" + url.getId());
+            assertThat(response.code()).isEqualTo(200);
+        }));
+    }
 }
