@@ -60,6 +60,7 @@ checkstyle {
 }
 
 tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
     useJUnitPlatform()
     testLogging {
         exceptionFormat = TestExceptionFormat.FULL
