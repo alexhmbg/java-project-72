@@ -59,12 +59,12 @@ public class App {
     public static Javalin getApp() throws IOException, SQLException {
         var hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(getDatabaseUrl());
-
+        hikariConfig.setUsername(System.getenv("JDBC_DATABASE_USERNAME"));
+        hikariConfig.setPassword(System.getenv("JDBC_DATABASE_PASSWORD"));
 
         var dataSource = new HikariDataSource(hikariConfig);
         String sql = getContentFromStream(getFileFromResourceAsStream("schema.sql"));
 
-        log.info(sql);
         try (var connection = dataSource.getConnection();
              var statement = connection.createStatement()) {
             statement.execute(sql);
