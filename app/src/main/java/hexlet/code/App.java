@@ -40,6 +40,7 @@ public class App {
     }
 
     private static boolean isProduction() {
+
         return getMode().equals("production");
     }
 
