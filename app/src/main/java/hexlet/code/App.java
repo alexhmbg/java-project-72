@@ -59,15 +59,20 @@ public class App {
 
 
     public static Javalin getApp() throws IOException, SQLException {
-
         var hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(getBD());
+        var dataBaseUrl = getBD();
+        if (dataBaseUrl == null || dataBaseUrl.equals("JDBC_DATABASE_URL")) {
+            hikariConfig.setJdbcUrl(dataBaseUrl);
+        } else {
+            hikariConfig.setUsername(System.getenv("JDBC_DATABASE_USERNAME"));
+            hikariConfig.setPassword(System.getenv("JDBC_DATABASE_PASSWORD"));
+            hikariConfig.setJdbcUrl(dataBaseUrl);
+        }
 
         var dataSource = new HikariDataSource(hikariConfig);
+
         var sql = getContent(getFile("schema.sql"));
-
         log.info(sql);
-
         try (var connection = dataSource.getConnection();
              var statement = connection.createStatement()) {
             statement.execute(sql);
