@@ -6,7 +6,6 @@ build/
 
 ### IntelliJ IDEA ###
 .idea
-
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
@@ -17,7 +16,7 @@ build/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-
+.jte-classes
 ### Eclipse ###
 .apt_generated
 .classpath
