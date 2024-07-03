@@ -40,7 +40,7 @@ public class UrlChecksController {
             ctx.sessionAttribute("flash", "Страница успешно проверена");
             ctx.sessionAttribute("flash-type", "success");
         } catch (Exception e) {
-            ctx.sessionAttribute("flash", "Отправленный URL не найден");
+            ctx.sessionAttribute("flash", "Передан некорректный URL");
             ctx.sessionAttribute("flash-type", "danger");
         }
 
