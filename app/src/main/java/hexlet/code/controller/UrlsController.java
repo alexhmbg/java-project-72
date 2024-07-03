@@ -40,7 +40,7 @@ public class UrlsController {
         if (UrlsRepository.existsByName(parsedUrl.toString())) {
             ctx.sessionAttribute("flash", "Страница уже существует");
             ctx.sessionAttribute("flash-type", "info");
-            ctx.redirect(NamedRoutes.urlsPath());
+            ctx.redirect(NamedRoutes.rootPath());
             return;
         }
 

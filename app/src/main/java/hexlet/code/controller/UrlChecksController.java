@@ -21,21 +21,29 @@ public class UrlChecksController {
                 .orElseThrow(() -> new NotFoundResponse("Url not found"));
 
         String urlName = url.getName();
-        HttpResponse<String> response = Unirest.get(urlName).asString();
-        Document document = Jsoup.parse(response.getBody());
 
-        int statusCode = response.getStatus();
-        String title = document.title();
+        try {
+            HttpResponse<String> response = Unirest.get(urlName).asString();
+            Document document = Jsoup.parse(response.getBody());
 
-        Element h1Element = document.selectFirst("h1");
-        String h1 = h1Element != null ? h1Element.text() : "";
+            int statusCode = response.getStatus();
+            String title = document.title();
 
-        String description = document.getElementsByAttributeValue("name", "description").attr("content");
+            Element h1Element = document.selectFirst("h1");
+            String h1 = h1Element != null ? h1Element.text() : "";
 
-        UrlCheck urlCheck = new UrlCheck(statusCode, title, h1, description, urlId);
-        UrlChecksRepository.save(urlCheck);
-        ctx.sessionAttribute("flash", "Страница успешно проверена");
-        ctx.sessionAttribute("flash-type", "success");
+            String description = document.getElementsByAttributeValue("name", "description").attr("content");
+
+            UrlCheck urlCheck = new UrlCheck(statusCode, title, h1, description, urlId);
+            UrlChecksRepository.save(urlCheck);
+
+            ctx.sessionAttribute("flash", "Страница успешно проверена");
+            ctx.sessionAttribute("flash-type", "success");
+        } catch (Exception e) {
+            ctx.sessionAttribute("flash", "Отправленный URL не найден");
+            ctx.sessionAttribute("flash-type", "danger");
+        }
+
         ctx.redirect(NamedRoutes.urlPath(urlId));
     }
 }
